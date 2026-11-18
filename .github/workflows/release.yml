@@ -661,7 +661,16 @@ jobs:
         if: matrix.config.release == 'linux'
         run: |
           set -euo pipefail
-          lib=target/release/bundle/appimage/Readest.AppDir/lib
+          # The AppDir is named after bundle.productName, which a fork may have
+          # renamed (this repository ships "Legere"), so resolve it instead of
+          # hardcoding the upstream product name.
+          lib=$(ls -d target/release/bundle/appimage/*.AppDir/lib 2>/dev/null | head -1)
+          if [ -z "$lib" ]; then
+            echo "::error::no AppDir found under target/release/bundle/appimage"
+            ls -la target/release/bundle/appimage
+            exit 1
+          fi
+          echo "Checking $lib"
           for so in libsoftokn3.so libfreeblpriv3.so libnssckbi.so libsqlite3.so.0 \
                     libpulse.so.0 libspeechd.so.2 libxkbcommon-x11.so.0; do
             [ -e "$lib/$so" ] || { echo "::error::$so is missing from the AppImage bundle"; exit 1; }
