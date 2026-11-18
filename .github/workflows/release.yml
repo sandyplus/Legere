@@ -376,7 +376,10 @@ jobs:
             # --config layers the iCloud overlay (Developer ID provisioning
             # profile + entitlements) onto the direct-distribution build; see
             # src-tauri/tauri.macos-nonestore.conf.json.
-            args: '--target universal-apple-darwin --config src-tauri/tauri.macos-nonestore.conf.json'
+            # The Developer ID overlay (src-tauri/tauri.macos-nonestore.conf.json)
+            # needs an Apple certificate and provisioning profile. This fork has
+            # neither, so it builds the plain (ad-hoc signed) macOS bundle.
+            args: '--target universal-apple-darwin'
           - os: windows-latest
             release: windows
             arch: x86_64
@@ -637,12 +640,6 @@ jobs:
           STRACE_MODE: '0'
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           NODE_OPTIONS: '--max-old-space-size=8192'
         with:
           projectPath: apps/readest-app
