@@ -358,38 +358,19 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          # This fork only ships macOS and Android; the upstream Linux and
+          # Windows matrix entries are intentionally removed.
           - os: ubuntu-latest
             release: android
             rust_target: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-          - os: ubuntu-22.04
-            release: linux
-            arch: x86_64
-            rust_target: x86_64-unknown-linux-gnu
-          - os: ubuntu-22.04-arm
-            release: linux
-            arch: aarch64
-            rust_target: aarch64-unknown-linux-gnu
           - os: macos-latest
             release: macos
             arch: aarch64
             rust_target: x86_64-apple-darwin,aarch64-apple-darwin
-            # --config layers the iCloud overlay (Developer ID provisioning
-            # profile + entitlements) onto the direct-distribution build; see
-            # src-tauri/tauri.macos-nonestore.conf.json.
             # The Developer ID overlay (src-tauri/tauri.macos-nonestore.conf.json)
             # needs an Apple certificate and provisioning profile. This fork has
             # neither, so it builds the plain (ad-hoc signed) macOS bundle.
             args: '--target universal-apple-darwin'
-          - os: windows-latest
-            release: windows
-            arch: x86_64
-            rust_target: x86_64-pc-windows-msvc
-            args: '--target x86_64-pc-windows-msvc --bundles nsis'
-          - os: windows-latest
-            release: windows
-            arch: aarch64
-            rust_target: aarch64-pc-windows-msvc
-            args: '--target aarch64-pc-windows-msvc --bundles nsis'
 
     runs-on: ${{ matrix.config.os }}
     # The Android build alone runs ~60min and its step is capped at 90 below;
