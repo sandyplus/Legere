@@ -1,4 +1,4 @@
-package com.bilingify.readest
+package com.luoshuhui.legere
 
 import android.view.KeyEvent
 import org.junit.Assert.assertFalse
